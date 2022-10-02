@@ -1,8 +1,13 @@
 use bevy::prelude::*;
 use bevy_inspector_egui::WorldInspectorPlugin;
 
-use resources::WinSize;
+use components::{Player, SpriteSize, Velocity};
+use constants::*;
+use resources::{GameTextures, WinSize};
 
+mod components;
+mod constants;
+mod player;
 mod resources;
 
 fn main() {
@@ -40,4 +45,31 @@ fn setup_system(
     // add WinSize resource
     let win_size = WinSize { w: win_w, h: win_h };
     commands.insert_resource(win_size);
+
+    // add GameTextures resource
+    let game_textures = GameTextures {
+        player: asset_server.load(PLAYER_SPRITE),
+        player_laser: asset_server.load(PLAYER_LASER_SPRITE),
+        big_asteroid: asset_server.load(BIG_ASTEROID_SPRITE),
+        med_asteroid: asset_server.load(MED_ASTEROID_SPRITE),
+        small_asteroid: asset_server.load(SMALL_ASTEROID_SPRITE),
+        tiny_asteroid: asset_server.load(TINY_ASTEROID_SPRITE),
+    };
+    commands.insert_resource(game_textures);
+
+    // spawn the player
+    commands
+        .spawn_bundle(SpriteBundle {
+            texture: asset_server.load(PLAYER_SPRITE),
+            transform: Transform {
+                translation: Vec3::new(0., 0., 10.),
+                scale: Vec3::new(SPRITE_SCALE, SPRITE_SCALE, 1.),
+                ..Default::default()
+            },
+            ..Default::default()
+        })
+        .insert(Name::new("Player"))
+        .insert(Player)
+        .insert(SpriteSize::from(PLAYER_SIZE))
+        .insert(Velocity { x: 0., y: 0.});
 }
