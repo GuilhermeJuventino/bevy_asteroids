@@ -8,6 +8,11 @@ pub struct Velocity {
 }
 
 #[derive(Component)]
+pub struct Rotate {
+    pub z: f32,
+}
+
+#[derive(Component)]
 pub struct SpriteSize(pub Vec2);
 
 impl From<(f32, f32)> for SpriteSize {

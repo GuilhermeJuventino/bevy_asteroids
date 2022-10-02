@@ -1,3 +1,5 @@
+use std::f32::consts::PI;
+
 // asset constants
 pub const PLAYER_SPRITE: &str = "playerShip2_blue.png";
 pub const PLAYER_LASER_SPRITE: &str = "laserBlue01.png";
@@ -17,3 +19,6 @@ pub const SPRITE_SCALE: f32 = 0.5;
 
 // game constants
 pub const TIME_STEP: f32 = 1. / 60.;
+
+// player constants
+pub const PLAYER_ROTATION_SPEED: f32 = 5.0 * 2.0 * PI / 360.;

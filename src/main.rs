@@ -1,8 +1,9 @@
 use bevy::prelude::*;
 use bevy_inspector_egui::WorldInspectorPlugin;
 
-use components::{Player, SpriteSize, Velocity};
+use components::{Player, Rotate, SpriteSize, Velocity};
 use constants::*;
+use player::PlayerPlugin;
 use resources::{GameTextures, WinSize};
 
 mod components;
@@ -21,6 +22,7 @@ fn main() {
         })
         .add_plugins(DefaultPlugins)
         .add_plugin(WorldInspectorPlugin::new())
+        .add_plugin(PlayerPlugin)
         .add_startup_system(setup_system)
         .run();
 }
@@ -55,12 +57,11 @@ fn setup_system(
         small_asteroid: asset_server.load(SMALL_ASTEROID_SPRITE),
         tiny_asteroid: asset_server.load(TINY_ASTEROID_SPRITE),
     };
-    commands.insert_resource(game_textures);
-
+    
     // spawn the player
     commands
         .spawn_bundle(SpriteBundle {
-            texture: asset_server.load(PLAYER_SPRITE),
+            texture: game_textures.player.clone(),
             transform: Transform {
                 translation: Vec3::new(0., 0., 10.),
                 scale: Vec3::new(SPRITE_SCALE, SPRITE_SCALE, 1.),
@@ -71,5 +72,8 @@ fn setup_system(
         .insert(Name::new("Player"))
         .insert(Player)
         .insert(SpriteSize::from(PLAYER_SIZE))
-        .insert(Velocity { x: 0., y: 0.});
+        .insert(Velocity { x: 0., y: 0. })
+        .insert(Rotate { z: 0. });
+
+    commands.insert_resource(game_textures);
 }
