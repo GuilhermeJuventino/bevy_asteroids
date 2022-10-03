@@ -9,7 +9,8 @@ pub struct PlayerPlugin;
 
 impl Plugin for PlayerPlugin {
     fn build(&self, app: &mut App) {
-        app.add_system(player_keyboard_event_system)
+        app
+            .add_system(player_keyboard_event_system)
             .add_system(player_movement_system);
     }
 }
@@ -36,7 +37,6 @@ fn player_movement_system(
 ) {
     for (entity, rotate, mut transform) in query.iter_mut() {
         let translation = &mut transform.translation;
-        let rotation = &mut transform.rotation;
-        rotation.z += rotate.z;
+        transform.rotate_z(rotate.z);
     }
 }
