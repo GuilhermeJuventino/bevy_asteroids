@@ -2,7 +2,7 @@ use bevy::prelude::*;
 
 use crate::{
     components::{Player, Velocity, Position},
-    constants::{PLAYER_ROTATION_SPEED, PLAYER_ACCELERATION, PLAYER_MAX_SPEED, PLAYER_DECELERATION},
+    constants::{PLAYER_ROTATION_SPEED, PLAYER_ACCELERATION, PLAYER_MAX_SPEED, PLAYER_DECELERATION}, resources::WinSize,
 };
 
 pub struct PlayerPlugin;
@@ -43,10 +43,31 @@ fn player_keyboard_event_system(
 fn player_movement_system(
     mut commands: Commands,
     mut query: Query<(Entity, &Velocity, &mut Position, &Player, &mut Transform)>,
+    win_size: Res<WinSize>,
 ) {
+    // values containing each corener of the screen
+    let right_side = win_size.w / 2.0;
+    let left_side = -right_side;
+    let top =  win_size.h / 2.0;
+    let bottom = -top;
+
     for (entity, velocity, mut position, player, mut transform) in query.iter_mut() {
         let translation = &mut transform.translation;
         let mut new_position = position.0 + velocity.0;
+        let half_scale = transform.scale.max_element();
+
+        // screen wrapping
+        if new_position.x > right_side + half_scale {
+            new_position.x = left_side - half_scale;
+        } else if new_position.x < left_side - half_scale {
+            new_position.x = right_side + half_scale;
+        }
+
+        if new_position.y > top + half_scale {
+            new_position.y = bottom - half_scale;
+        } else if new_position.y < bottom - half_scale {
+            new_position.y = top + half_scale;
+        }
 
         transform.rotation = Quat::from_rotation_z(player.rotation_angle);
         position.0 = new_position;
