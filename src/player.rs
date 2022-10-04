@@ -22,14 +22,6 @@ fn player_keyboard_event_system(
     mut query: Query<(&mut Player, &mut Velocity)>,
 ) {
     for (mut player, mut velocity) in query.iter_mut() {
-        /*player.rotation_angle = if kb.pressed(KeyCode::Left) {
-            PLAYER_ROTATION_SPEED
-        } else if kb.pressed(KeyCode::Right) {
-            -PLAYER_ROTATION_SPEED
-        } else {
-            0.
-        };*/
-
         if kb.pressed(KeyCode::Left) {
             player.rotation_angle += PLAYER_ROTATION_SPEED;
         } else if kb.pressed(KeyCode::Right) {
@@ -38,7 +30,7 @@ fn player_keyboard_event_system(
 
         if kb.pressed(KeyCode::Up) {
             velocity.0 += player.direction() * PLAYER_ACCELERATION;
-            println!("{}", velocity.0);
+
             if velocity.0.length() > PLAYER_MAX_SPEED  {
                 velocity.0 = velocity.0.normalize_or_zero() * PLAYER_MAX_SPEED;
             }
