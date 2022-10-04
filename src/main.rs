@@ -1,7 +1,7 @@
 use bevy::prelude::*;
-use bevy_inspector_egui::WorldInspectorPlugin;
+use bevy_inspector_egui::{WorldInspectorPlugin, RegisterInspectable};
 
-use components::{Player, Rotate, SpriteSize, Velocity};
+use components::{Player, Rotate, SpriteSize, Velocity, Position};
 use constants::*;
 use player::PlayerPlugin;
 use resources::{GameTextures, WinSize};
@@ -70,10 +70,12 @@ fn setup_system(
             ..Default::default()
         })
         .insert(Name::new("Player"))
-        .insert(Player)
+        .insert(Player {
+            rotation_angle: 0.0
+        })
         .insert(SpriteSize::from(PLAYER_SIZE))
-        .insert(Velocity { x: 0., y: 0. })
-        .insert(Rotate { z: 0. });
+        .insert(Velocity(Vec2::splat(0.0)))
+        .insert(Position(Vec2::splat(0.0)));
 
     commands.insert_resource(game_textures);
 }
