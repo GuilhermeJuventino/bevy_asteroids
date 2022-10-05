@@ -1,18 +1,19 @@
 use bevy::prelude::*;
 
-use crate::{components::{Velocity, Position, Laser, LaserDespawnTimer}, resources::WinSize};
+use crate::{
+    components::{Laser, LaserDespawnTimer, Position, Velocity},
+    resources::WinSize,
+};
 
 pub struct ProjectilePlugin;
 
 impl Plugin for ProjectilePlugin {
     fn build(&self, app: &mut App) {
-        app
-            .add_system(projectile_movement_system)
+        app.add_system(projectile_movement_system)
             .add_system(projectile_despawn_system)
             .add_system(sync_laser_transform_system.after(projectile_movement_system));
     }
 }
-
 
 fn projectile_movement_system(
     mut query: Query<(&Velocity, &mut Position, &Transform)>,
@@ -21,7 +22,7 @@ fn projectile_movement_system(
     // values containing each corener of the screen
     let right_side = win_size.w / 2.0;
     let left_side = -right_side;
-    let top =  win_size.h / 2.0;
+    let top = win_size.h / 2.0;
     let bottom = -top;
 
     for (velocity, mut position, transform) in query.iter_mut() {
@@ -45,15 +46,9 @@ fn projectile_movement_system(
     }
 }
 
-fn sync_laser_transform_system(
-    mut query: Query<(&Position, &mut Transform), With<Laser>>,
-) {
+fn sync_laser_transform_system(mut query: Query<(&Position, &mut Transform), With<Laser>>) {
     for (position, mut transform) in query.iter_mut() {
-        transform.translation = Vec3::new(
-            position.0.x,
-            position.0.y,
-            transform.translation.z,
-        );
+        transform.translation = Vec3::new(position.0.x, position.0.y, transform.translation.z);
     }
 }
 

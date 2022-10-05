@@ -1,16 +1,22 @@
 use bevy::prelude::*;
 
 use crate::{
-    components::{Player, Velocity, Position, PlayerLaserCooldown, Laser, SpriteSize, FromPlayer, LaserDespawnTimer},
-    constants::{PLAYER_ROTATION_SPEED, PLAYER_ACCELERATION, PLAYER_MAX_SPEED, PLAYER_DECELERATION, SPRITE_SCALE, PLAYER_LASER_SIZE, PLAYER_LASER_SPEED}, resources::{WinSize, GameTextures},
+    components::{
+        FromPlayer, Laser, LaserDespawnTimer, Player, PlayerLaserCooldown, Position, SpriteSize,
+        Velocity,
+    },
+    constants::{
+        PLAYER_ACCELERATION, PLAYER_DECELERATION, PLAYER_LASER_SIZE, PLAYER_LASER_SPEED,
+        PLAYER_MAX_SPEED, PLAYER_ROTATION_SPEED, SPRITE_SCALE,
+    },
+    resources::{GameTextures, WinSize},
 };
 
 pub struct PlayerPlugin;
 
 impl Plugin for PlayerPlugin {
     fn build(&self, app: &mut App) {
-        app
-            .add_system(player_keyboard_event_system)
+        app.add_system(player_keyboard_event_system)
             .add_system(player_movement_system)
             .add_system(sync_player_transform_system.after(player_movement_system))
             .add_system(player_shoot_projectile_system);
@@ -29,15 +35,15 @@ fn player_keyboard_event_system(
         } else if kb.pressed(KeyCode::Right) {
             player.rotation_angle -= PLAYER_ROTATION_SPEED;
         }
-        
+
         // accelerate the ship towards the direction it's currently facing
         if kb.pressed(KeyCode::Up) {
             velocity.0 += player.direction() * PLAYER_ACCELERATION;
 
-            if velocity.0.length() > PLAYER_MAX_SPEED  {
+            if velocity.0.length() > PLAYER_MAX_SPEED {
                 velocity.0 = velocity.0.normalize_or_zero() * PLAYER_MAX_SPEED;
             }
-        } else if !kb.pressed(KeyCode::Up)  {
+        } else if !kb.pressed(KeyCode::Up) {
             velocity.0 *= 1.0 - PLAYER_DECELERATION;
         }
     }
@@ -50,7 +56,7 @@ fn player_movement_system(
     // values containing each corener of the screen
     let right_side = win_size.w / 2.0;
     let left_side = -right_side;
-    let top =  win_size.h / 2.0;
+    let top = win_size.h / 2.0;
     let bottom = -top;
 
     for (velocity, mut position, player, mut transform) in query.iter_mut() {
@@ -100,16 +106,18 @@ fn player_shoot_projectile_system(
                         ..Default::default()
                     })
                     .insert(Name::new("Player laser"))
-                    .insert(Laser {starting_position: position.0.clone()})
+                    .insert(Laser {
+                        starting_position: position.0.clone(),
+                    })
                     .insert(LaserDespawnTimer::default())
                     .insert(FromPlayer)
                     .insert(SpriteSize::from(PLAYER_LASER_SIZE))
                     .insert(Velocity(
-                        player.direction().normalize() * PLAYER_LASER_SPEED)
-                    )
+                        player.direction().normalize() * PLAYER_LASER_SPEED,
+                    ))
                     .insert(Position(position.0.clone()));
 
-                    has_fired = true;
+                has_fired = true;
             }
 
             if has_fired {
@@ -119,14 +127,8 @@ fn player_shoot_projectile_system(
     }
 }
 
-fn sync_player_transform_system(
-    mut query: Query<(&Position, &mut Transform), With<Player>>,
-) {
+fn sync_player_transform_system(mut query: Query<(&Position, &mut Transform), With<Player>>) {
     for (position, mut transform) in query.get_single_mut() {
-        transform.translation = Vec3::new(
-            position.0.x,
-            position.0.y,
-            transform.translation.z,
-        );
+        transform.translation = Vec3::new(position.0.x, position.0.y, transform.translation.z);
     }
 }

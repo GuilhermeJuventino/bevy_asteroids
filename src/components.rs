@@ -25,7 +25,7 @@ impl From<(f32, f32)> for SpriteSize {
 
 #[derive(Component)]
 pub struct Laser {
-    pub starting_position: Vec2
+    pub starting_position: Vec2,
 }
 
 #[derive(Component)]
@@ -46,7 +46,7 @@ pub struct Player {
 impl Player {
     pub fn direction(&self) -> Vec2 {
         let (y, x) = (self.rotation_angle + PI / 2.0).sin_cos();
-        
+
         Vec2::new(x, y)
     }
 }

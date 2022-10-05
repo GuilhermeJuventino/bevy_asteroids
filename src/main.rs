@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 use bevy_inspector_egui::WorldInspectorPlugin;
 
-use components::{Player, SpriteSize, Velocity, Position, PlayerLaserCooldown};
+use components::{Player, PlayerLaserCooldown, Position, SpriteSize, Velocity};
 use constants::*;
 use player::PlayerPlugin;
 use projectile::ProjectilePlugin;
@@ -10,8 +10,8 @@ use resources::{GameTextures, WinSize};
 mod components;
 mod constants;
 mod player;
-mod resources;
 mod projectile;
+mod resources;
 
 fn main() {
     App::new()
@@ -60,7 +60,7 @@ fn setup_system(
         small_asteroid: asset_server.load(SMALL_ASTEROID_SPRITE),
         tiny_asteroid: asset_server.load(TINY_ASTEROID_SPRITE),
     };
-    
+
     // spawn the player
     commands
         .spawn_bundle(SpriteBundle {
@@ -74,7 +74,7 @@ fn setup_system(
         })
         .insert(Name::new("Player"))
         .insert(Player {
-            rotation_angle: 0.0
+            rotation_angle: 0.0,
         })
         .insert(SpriteSize::from(PLAYER_SIZE))
         .insert(Velocity(Vec2::splat(0.0)))
