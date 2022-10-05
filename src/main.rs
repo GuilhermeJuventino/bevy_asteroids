@@ -1,15 +1,17 @@
 use bevy::prelude::*;
-use bevy_inspector_egui::{WorldInspectorPlugin, RegisterInspectable};
+use bevy_inspector_egui::WorldInspectorPlugin;
 
-use components::{Player, Rotate, SpriteSize, Velocity, Position};
+use components::{Player, SpriteSize, Velocity, Position, PlayerLaserCooldown};
 use constants::*;
 use player::PlayerPlugin;
+use projectile::ProjectilePlugin;
 use resources::{GameTextures, WinSize};
 
 mod components;
 mod constants;
 mod player;
 mod resources;
+mod projectile;
 
 fn main() {
     App::new()
@@ -23,6 +25,7 @@ fn main() {
         .add_plugins(DefaultPlugins)
         .add_plugin(WorldInspectorPlugin::new())
         .add_plugin(PlayerPlugin)
+        .add_plugin(ProjectilePlugin)
         .add_startup_system(setup_system)
         .run();
 }
@@ -75,7 +78,8 @@ fn setup_system(
         })
         .insert(SpriteSize::from(PLAYER_SIZE))
         .insert(Velocity(Vec2::splat(0.0)))
-        .insert(Position(Vec2::splat(0.0)));
+        .insert(Position(Vec2::splat(0.0)))
+        .insert(PlayerLaserCooldown::default());
 
     commands.insert_resource(game_textures);
 }

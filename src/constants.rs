@@ -25,3 +25,6 @@ pub const PLAYER_ROTATION_SPEED: f32 = 5.0 * 2.0 * PI / 360.;
 pub const PLAYER_MAX_SPEED: f32 = 10.0;
 pub const PLAYER_ACCELERATION: f32 = 0.2;
 pub const PLAYER_DECELERATION: f32 = 0.01;
+
+// projectile constants
+pub const PLAYER_LASER_SPEED: f32 = 11.0;
