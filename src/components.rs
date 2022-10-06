@@ -64,4 +64,7 @@ impl Default for PlayerLaserCooldown {
 }
 
 // asteroid components
-pub struct Asteroid;
+#[derive(Component)]
+pub struct Asteroid {
+    pub size: i32
+}

@@ -16,6 +16,7 @@ pub const SMALL_ASTEROID_SIZE: (f32, f32) = (28., 28.);
 pub const TINY_ASTEROID_SIZE: (f32, f32) = (18., 18.);
 
 pub const SPRITE_SCALE: f32 = 0.5;
+pub const ASTEROID_SCALE: f32 = 1.5;
 
 // game constants
 pub const TIME_STEP: f32 = 1. / 60.;

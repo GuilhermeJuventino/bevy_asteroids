@@ -1,3 +1,4 @@
+use asteroids::AsteroidPlugin;
 use bevy::prelude::*;
 use bevy_inspector_egui::WorldInspectorPlugin;
 
@@ -11,6 +12,7 @@ mod components;
 mod constants;
 mod player;
 mod projectile;
+mod asteroids;
 mod resources;
 
 fn main() {
@@ -26,6 +28,7 @@ fn main() {
         .add_plugin(WorldInspectorPlugin::new())
         .add_plugin(PlayerPlugin)
         .add_plugin(ProjectilePlugin)
+        .add_plugin(AsteroidPlugin)
         .add_startup_system(setup_system)
         .run();
 }
