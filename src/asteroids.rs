@@ -19,11 +19,31 @@ fn asteroid_spawning_system(
     win_size: Res<WinSize>,
 ) {
     let mut rng = thread_rng();
-    for _ in 0..3 {
-        let x = rng.gen_range(-1..1) as f32;
-        let y = rng.gen_range(-1..1) as f32;
+    let max_dist = win_size.w.min(win_size.h);
+    let min_dist = 320. as f32;
+    let dist_range = min_dist..max_dist;
+    let angle_offset_range = 0.0..100.0 as f32;
 
-        let position = Vec2::new(x, y).normalize() * win_size.w.min(win_size.h) / 2.;
+    let polar = vec![
+        (
+            0. + rng.gen_range(angle_offset_range.clone()),
+            rng.gen_range(dist_range.clone())
+        ),
+
+        (
+            120. + rng.gen_range(angle_offset_range.clone()),
+            rng.gen_range(dist_range.clone())
+        ),
+
+        (
+            240. + rng.gen_range(angle_offset_range.clone()),
+            rng.gen_range(dist_range.clone()),
+        ),
+    ];
+
+    for (angle, dist) in polar.iter() {
+        let (x, y) = angle.to_radians().sin_cos();
+        let position = Vec2::new(x * dist, y * dist);
 
         commands
             .spawn_bundle(SpriteBundle {
