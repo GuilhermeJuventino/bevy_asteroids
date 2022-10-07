@@ -14,4 +14,11 @@ pub struct GameTextures {
     pub tiny_asteroid: Handle<Image>,
 }
 
+#[derive(Debug, Clone, PartialEq, Eq, Hash, Copy)]
+pub enum GameStates {
+    TitleScreen,
+    InGame,
+    GameOver,
+}
+
 // player resources

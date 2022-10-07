@@ -3,27 +3,18 @@ use rand::prelude::*;
 
 use crate::{resources::{GameTextures, WinSize}, constants::{BIG_ASTEROID_SIZE, ASTEROID_SCALE}, components::{Asteroid, SpriteSize, Velocity, Position}};
 
-pub struct AsteroidPlugin;
-
-impl Plugin for AsteroidPlugin {
-    fn build(&self, app: &mut App) {
-        app
-            .add_system(asteroid_spawning_system);
-    }
-}
-
-
-fn asteroid_spawning_system(
+pub fn asteroid_spawning_system(
     mut commands: Commands,
     game_textures: Res<GameTextures>,
     win_size: Res<WinSize>,
 ) {
     let mut rng = thread_rng();
-    let max_dist = win_size.w.min(win_size.h);
+    let max_dist = win_size.w.min(win_size.h) / 2.;
     let min_dist = 320. as f32;
     let dist_range = min_dist..max_dist;
     let angle_offset_range = 0.0..100.0 as f32;
 
+    // array with 3 evenly spaced angles
     let polar = vec![
         (
             0. + rng.gen_range(angle_offset_range.clone()),

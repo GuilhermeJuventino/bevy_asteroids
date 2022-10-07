@@ -1,4 +1,3 @@
-use asteroids::AsteroidPlugin;
 use bevy::prelude::*;
 use bevy_inspector_egui::WorldInspectorPlugin;
 
@@ -6,7 +5,8 @@ use components::{Player, PlayerLaserCooldown, Position, SpriteSize, Velocity};
 use constants::*;
 use player::PlayerPlugin;
 use projectile::ProjectilePlugin;
-use resources::{GameTextures, WinSize};
+use resources::{GameTextures, WinSize, GameStates};
+use states::InGameStatePlugin;
 
 mod components;
 mod constants;
@@ -14,9 +14,11 @@ mod player;
 mod projectile;
 mod asteroids;
 mod resources;
+mod states;
 
 fn main() {
     App::new()
+        .add_state(GameStates::InGame)
         .insert_resource(ClearColor(Color::rgb(0.04, 0.04, 0.04)))
         .insert_resource(WindowDescriptor {
             title: "Bevy Asteroids".to_string(),
@@ -26,9 +28,9 @@ fn main() {
         })
         .add_plugins(DefaultPlugins)
         .add_plugin(WorldInspectorPlugin::new())
+        .add_plugin(InGameStatePlugin)
         .add_plugin(PlayerPlugin)
         .add_plugin(ProjectilePlugin)
-        .add_plugin(AsteroidPlugin)
         .add_startup_system(setup_system)
         .run();
 }
