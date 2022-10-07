@@ -10,9 +10,12 @@ pub struct Velocity(pub Vec2);
 pub struct Position(pub Vec2);
 
 #[derive(Component)]
+pub struct RotationAngle(pub f32);
+
+/*#[derive(Component)]
 pub struct Rotate {
     pub z: f32,
-}
+}*/
 
 #[derive(Component)]
 pub struct SpriteSize(pub Vec2);
@@ -39,13 +42,11 @@ impl Default for LaserDespawnTimer {
 
 // player components
 #[derive(Component)]
-pub struct Player {
-    pub rotation_angle: f32,
-}
+pub struct Player;
 
 impl Player {
-    pub fn direction(&self) -> Vec2 {
-        let (y, x) = (self.rotation_angle + PI / 2.0).sin_cos();
+    pub fn direction(&self, rotation_angle: f32) -> Vec2 {
+        let (y, x) = (rotation_angle + PI / 2.0).sin_cos();
 
         Vec2::new(x, y)
     }
@@ -66,5 +67,6 @@ impl Default for PlayerLaserCooldown {
 // asteroid components
 #[derive(Component)]
 pub struct Asteroid {
-    pub size: i32
+    pub size: i32,
+    pub rotation_speed: f32,
 }

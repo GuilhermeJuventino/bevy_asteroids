@@ -1,18 +1,19 @@
+use asteroids::AsteroidPlugin;
 use bevy::prelude::*;
 use bevy_inspector_egui::WorldInspectorPlugin;
 
-use components::{Player, PlayerLaserCooldown, Position, SpriteSize, Velocity};
+use components::{Player, PlayerLaserCooldown, Position, RotationAngle, SpriteSize, Velocity};
 use constants::*;
 use player::PlayerPlugin;
 use projectile::ProjectilePlugin;
-use resources::{GameTextures, WinSize, GameStates};
+use resources::{GameStates, GameTextures, WinSize};
 use states::InGameStatePlugin;
 
+mod asteroids;
 mod components;
 mod constants;
 mod player;
 mod projectile;
-mod asteroids;
 mod resources;
 mod states;
 
@@ -31,6 +32,7 @@ fn main() {
         .add_plugin(InGameStatePlugin)
         .add_plugin(PlayerPlugin)
         .add_plugin(ProjectilePlugin)
+        .add_plugin(AsteroidPlugin)
         .add_startup_system(setup_system)
         .run();
 }
@@ -78,12 +80,11 @@ fn setup_system(
             ..Default::default()
         })
         .insert(Name::new("Player"))
-        .insert(Player {
-            rotation_angle: 0.0,
-        })
+        .insert(Player)
         .insert(SpriteSize::from(PLAYER_SIZE))
         .insert(Velocity(Vec2::splat(0.0)))
         .insert(Position(Vec2::splat(0.0)))
+        .insert(RotationAngle(0.0))
         .insert(PlayerLaserCooldown::default());
 
     commands.insert_resource(game_textures);

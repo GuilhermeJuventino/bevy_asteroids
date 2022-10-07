@@ -29,3 +29,6 @@ pub const PLAYER_DECELERATION: f32 = 0.01;
 
 // projectile constants
 pub const PLAYER_LASER_SPEED: f32 = 13.0;
+
+// asteroids' constants
+pub const ASTEROID_ROTATION_SPEED: f32 = 1.4 / 360.;
