@@ -10,6 +10,7 @@ use resources::{GameStates, GameTextures, WinSize};
 use states::InGameStatePlugin;
 
 mod asteroids;
+mod collisions;
 mod components;
 mod constants;
 mod player;
