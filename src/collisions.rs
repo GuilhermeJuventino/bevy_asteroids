@@ -2,7 +2,9 @@ use std::collections::HashSet;
 
 use bevy::{math::Vec3Swizzles, prelude::*, sprite::collide_aabb::collide};
 
-use crate::components::{Asteroid, FromPlayer, Laser, LaserDespawnTimer, SpriteSize, Player};
+use crate::components::{
+    Asteroid, AsteroidToSpawn, FromPlayer, Laser, LaserDespawnTimer, Player, Position, SpriteSize,
+};
 
 pub fn player_laser_hit_asteroid_system(
     mut commands: Commands,
@@ -10,7 +12,7 @@ pub fn player_laser_hit_asteroid_system(
         (Entity, &Transform, &SpriteSize, &LaserDespawnTimer),
         (With<Laser>, With<FromPlayer>),
     >,
-    asteroid_query: Query<(Entity, &Transform, &SpriteSize), With<Asteroid>>,
+    asteroid_query: Query<(Entity, &Transform, &SpriteSize, &Asteroid), With<Asteroid>>,
 ) {
     let mut despawned_entities: HashSet<Entity> = HashSet::new();
 
@@ -23,7 +25,7 @@ pub fn player_laser_hit_asteroid_system(
         let laser_scale = laser_tf.scale.xy();
 
         // Iterate trough asteroids
-        for (asteroid_entity, asteroid_tf, asteroid_size) in asteroid_query.iter() {
+        for (asteroid_entity, asteroid_tf, asteroid_size, asteroid) in asteroid_query.iter() {
             if despawned_entities.contains(&asteroid_entity)
                 || despawned_entities.contains(&laser_entity)
                 || despawn_timer.0.just_finished()
@@ -49,6 +51,17 @@ pub fn player_laser_hit_asteroid_system(
                 // Remove the player laser
                 commands.entity(laser_entity).despawn();
                 despawned_entities.insert(laser_entity);
+
+                // Store position to spawn smaller asteroids
+                if asteroid.size > 0 {
+                    commands
+                        .spawn()
+                        .insert(AsteroidToSpawn {
+                            size: asteroid.size - 1,
+                            translation: asteroid_tf.translation.clone(),
+                        })
+                        .insert(Name::new("Asteroid To Spawn"));
+                }
             }
         }
     }
@@ -57,7 +70,7 @@ pub fn player_laser_hit_asteroid_system(
 pub fn player_hit_asteroid_system(
     mut commands: Commands,
     player_query: Query<(Entity, &Transform, &SpriteSize), With<Player>>,
-    asteroid_query: Query<(Entity, &Transform, &SpriteSize), With<Asteroid>>,
+    asteroid_query: Query<(Entity, &Transform, &Position, &SpriteSize, &Asteroid), With<Asteroid>>,
 ) {
     let mut despawned_entities: HashSet<Entity> = HashSet::new();
 
@@ -70,7 +83,9 @@ pub fn player_hit_asteroid_system(
         let player_scale = player_tf.scale.xy();
 
         // Iterate trough asteroids
-        for (asteroid_entity, asteroid_tf, asteroid_size) in asteroid_query.iter() {
+        for (asteroid_entity, asteroid_tf, asteroid_position, asteroid_size, asteroid) in
+            asteroid_query.iter()
+        {
             if despawned_entities.contains(&asteroid_entity)
                 || despawned_entities.contains(&player_entity)
             {
@@ -95,6 +110,21 @@ pub fn player_hit_asteroid_system(
                 // Remove the player
                 commands.entity(player_entity).despawn();
                 despawned_entities.insert(player_entity);
+
+                // Store position to spawn smaller asteroids
+                if asteroid.size > 0 {
+                    commands
+                        .spawn()
+                        .insert(AsteroidToSpawn {
+                            size: asteroid.size - 1,
+                            translation: Vec3::new(
+                                asteroid_position.0.x,
+                                asteroid_position.0.y,
+                                10.,
+                            ),
+                        })
+                        .insert(Name::new("Asteroid To Spawn"));
+                }
             }
         }
     }

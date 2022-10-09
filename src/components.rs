@@ -12,11 +12,6 @@ pub struct Position(pub Vec2);
 #[derive(Component)]
 pub struct RotationAngle(pub f32);
 
-/*#[derive(Component)]
-pub struct Rotate {
-    pub z: f32,
-}*/
-
 #[derive(Component)]
 pub struct SpriteSize(pub Vec2);
 
@@ -69,4 +64,10 @@ impl Default for PlayerLaserCooldown {
 pub struct Asteroid {
     pub size: i32,
     pub rotation_speed: f32,
+}
+
+#[derive(Component)]
+pub struct AsteroidToSpawn {
+    pub size: i32,
+    pub translation: Vec3,
 }

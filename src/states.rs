@@ -1,8 +1,8 @@
 use bevy::prelude::*;
 
 use crate::{
-    asteroids::asteroid_spawning_system,
-    collisions::{player_laser_hit_asteroid_system, player_hit_asteroid_system},
+    asteroids::{asteroid_spawning_system, split_asteroid_system},
+    collisions::{player_hit_asteroid_system, player_laser_hit_asteroid_system},
     components::{Position, RotationAngle, Velocity},
     resources::{GameStates, WinSize},
 };
@@ -20,7 +20,8 @@ impl Plugin for InGameStatePlugin {
                 .with_system(sync_transform_system.after(movement_system))
                 .with_system(sync_rotation_system)
                 .with_system(player_laser_hit_asteroid_system)
-                .with_system(player_hit_asteroid_system),
+                .with_system(player_hit_asteroid_system)
+                .with_system(split_asteroid_system),
         )
         .add_system_set(SystemSet::on_exit(GameStates::InGame));
     }

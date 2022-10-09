@@ -11,7 +11,6 @@ pub struct GameTextures {
     pub big_asteroid: Handle<Image>,
     pub med_asteroid: Handle<Image>,
     pub small_asteroid: Handle<Image>,
-    pub tiny_asteroid: Handle<Image>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash, Copy)]

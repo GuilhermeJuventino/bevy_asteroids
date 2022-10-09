@@ -66,7 +66,6 @@ fn setup_system(
         big_asteroid: asset_server.load(BIG_ASTEROID_SPRITE),
         med_asteroid: asset_server.load(MED_ASTEROID_SPRITE),
         small_asteroid: asset_server.load(SMALL_ASTEROID_SPRITE),
-        tiny_asteroid: asset_server.load(TINY_ASTEROID_SPRITE),
     };
 
     // spawn the player
